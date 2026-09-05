@@ -1,4 +1,4 @@
-package com.ecommerce.ecommerce_api.dto;
+package com.ecommerce.ecommerce_api.dto.login_register;
 
 import com.ecommerce.ecommerce_api.models.enums.UserRoles;
 

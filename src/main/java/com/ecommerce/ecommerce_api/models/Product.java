@@ -21,11 +21,15 @@ public class Product {
     private Long id;
 
     @Column(nullable = false)
-
     private String name;
 
     @Column(nullable = false)
     private BigDecimal price;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @Column(nullable = false)
     private Integer stock;
 }

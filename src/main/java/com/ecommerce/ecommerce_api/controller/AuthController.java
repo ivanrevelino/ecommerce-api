@@ -1,9 +1,9 @@
 package com.ecommerce.ecommerce_api.controller;
 
-import com.ecommerce.ecommerce_api.dto.LoginRequestDTO;
-import com.ecommerce.ecommerce_api.dto.LoginResponseDTO;
-import com.ecommerce.ecommerce_api.dto.RegisterRequestDTO;
-import com.ecommerce.ecommerce_api.dto.RegisterResponseDTO;
+import com.ecommerce.ecommerce_api.dto.login_register.LoginRequestDTO;
+import com.ecommerce.ecommerce_api.dto.login_register.LoginResponseDTO;
+import com.ecommerce.ecommerce_api.dto.login_register.RegisterRequestDTO;
+import com.ecommerce.ecommerce_api.dto.login_register.RegisterResponseDTO;
 import com.ecommerce.ecommerce_api.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
