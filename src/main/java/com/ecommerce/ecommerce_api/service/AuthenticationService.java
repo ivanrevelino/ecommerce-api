@@ -42,7 +42,7 @@ public class AuthenticationService {
 
     public ResponseEntity<RegisterResponseDTO> register(RegisterRequestDTO request) {
 
-        if (repository.findByUsername(request.username()) == null) {
+        if (repository.findByUsername(request.username()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
