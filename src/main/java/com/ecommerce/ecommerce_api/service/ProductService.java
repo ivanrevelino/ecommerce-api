@@ -2,6 +2,7 @@ package com.ecommerce.ecommerce_api.service;
 
 import com.ecommerce.ecommerce_api.dto.product.ProductRequestDTO;
 import com.ecommerce.ecommerce_api.dto.product.ProductResponseDTO;
+import com.ecommerce.ecommerce_api.exception.InsufficientStockException;
 import com.ecommerce.ecommerce_api.exception.ResourceNotFoundException;
 import com.ecommerce.ecommerce_api.models.Category;
 import com.ecommerce.ecommerce_api.models.Product;
@@ -75,9 +76,17 @@ public class ProductService {
         return ResponseEntity.noContent().build();
     }
 
-    private Product findProductById(Long id) {
+    public Product findProductById(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+    }
+
+    public void decreaseStock(Product product, Integer quantity) {
+        if (product.getStock() < quantity) {
+            throw new InsufficientStockException("Insufficient stock"); // sla oq escrever
+        }
+        product.setStock(product.getStock() - quantity);
+        productRepository.save(product);
     }
 
     private ProductResponseDTO toResponseDTO(Product product) {

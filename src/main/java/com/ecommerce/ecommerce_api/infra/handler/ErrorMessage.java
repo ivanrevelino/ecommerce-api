@@ -1,10 +1,12 @@
 package com.ecommerce.ecommerce_api.infra.handler;
 
 import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Builder
+@Data
 public class ErrorMessage {
 
     private String message;

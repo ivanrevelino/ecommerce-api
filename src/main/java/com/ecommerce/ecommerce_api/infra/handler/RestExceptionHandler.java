@@ -1,5 +1,7 @@
 package com.ecommerce.ecommerce_api.infra.handler;
 
+import com.ecommerce.ecommerce_api.exception.BadRequestException;
+import com.ecommerce.ecommerce_api.exception.InsufficientStockException;
 import com.ecommerce.ecommerce_api.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,4 +21,16 @@ public class RestExceptionHandler {
                 .build();
         return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler({BadRequestException.class, InsufficientStockException.class})
+    public ResponseEntity<ErrorMessage> handleBadRequest(Exception exception) {
+        ErrorMessage errorMessage = ErrorMessage.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .developer_message("Se vira ai cara - Dev Ivan")
+                .build();
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
 }
