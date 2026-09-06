@@ -5,11 +5,10 @@ import com.ecommerce.ecommerce_api.dto.order.OrderResponseDTO;
 import com.ecommerce.ecommerce_api.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/orders")
 @RestController
@@ -21,5 +20,15 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody @Valid OrderRequestDTO request) {
         return orderService.createOrder(request);
+    }
+
+    @GetMapping
+    public Page<OrderResponseDTO> findAll(Pageable pageable) {
+        return orderService.findAll(pageable);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderResponseDTO> findById(@PathVariable Long id) {
+        return orderService.findById(id);
     }
 }
