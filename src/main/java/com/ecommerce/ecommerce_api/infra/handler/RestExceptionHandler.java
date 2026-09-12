@@ -41,6 +41,18 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(badRequestExceptionDetails, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ConcurrentStockException.class)
+    public ResponseEntity<ExceptionDetails> concurrentStockException(Exception exception) {
+        ExceptionDetails concurrentStockExceptionMessage = BadRequestExceptionDetails.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.CONFLICT.value())
+                .error(HttpStatus.CONFLICT.getReasonPhrase())
+                .developer_message("The stock for this product has been changed by another purchase. Please try again.")
+                .timestamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(concurrentStockExceptionMessage, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationExceptionDetails> methodArgumentNotValidException(MethodArgumentNotValidException exception) {
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
