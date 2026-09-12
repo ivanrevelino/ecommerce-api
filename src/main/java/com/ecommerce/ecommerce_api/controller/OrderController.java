@@ -31,4 +31,10 @@ public class OrderController {
     public ResponseEntity<OrderResponseDTO> findById(@PathVariable Long id) {
         return orderService.findById(id);
     }
+
+    @PatchMapping("/{orderId}/cancel")
+    public ResponseEntity<Void> returnOrder(@PathVariable Long orderId) {
+        orderService.returnOrder(orderId);
+        return ResponseEntity.noContent().build();
+    }
 }

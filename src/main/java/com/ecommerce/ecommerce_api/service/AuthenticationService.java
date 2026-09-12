@@ -34,6 +34,7 @@ public class AuthenticationService {
         );
         Authentication authentication = authManager.authenticate(authenticationToken);
         User user = (User) authentication.getPrincipal();
+        assert user != null;
         String token = jwtService.generateToken(user);
 
         log.info("User(id: {}, username: {}, role: {}) made login successfully", user.getId(), user.getUsername(), user.getRoles());

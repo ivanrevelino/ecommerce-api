@@ -18,12 +18,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -71,29 +73,48 @@ public class OrderService {
 
         orderToBeSaved.setOrderItems(orderItems);
         orderToBeSaved.setTotal(total);
-
         Order saved = repository.save(orderToBeSaved);
-        List<OrderItemResponseDTO> itemResponseDTOS = orderItemMapper.toDto(saved.getOrderItems());
 
         OrderResponseDTO orderResponseDTO = orderMapper.toDto(saved);
 
         return new ResponseEntity<>(orderResponseDTO, HttpStatus.CREATED);
     }
 
+    @Transactional
+    public void returnOrder(Long orderId) {
+        User user = userService.getAuthenticatedUser();
+        Order order = repository.findByIdAndUser(orderId, user)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        if (order.getStatus() == OrderStatus.CANCELLED) throw new IllegalStateException("Order is already cancelled");
+
+        List<OrderItem> orderItems = order.getOrderItems();
+
+        for (OrderItem item : orderItems) {
+            Product product = item.getProduct();
+            Integer quantity = item.getQuantity();
+
+            product.setStock(product.getStock() + quantity);
+            productService.save(product);
+        }
+
+        order.setStatus(OrderStatus.CANCELLED);
+        repository.save(order);
+    }
+
     public ResponseEntity<OrderResponseDTO> findById(Long id) {
         User user = userService.getAuthenticatedUser();
 
         Order order = repository.findByIdAndUser(id, user)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Order not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
-        return new ResponseEntity<>(orderMapper.toDto(order), HttpStatus.ACCEPTED);
+        return ResponseEntity.ok(orderMapper.toDto(order));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public Order findOrderById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Order not found with id + " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id + " + id));
     }
 
     public BigDecimal calculateSubtotal(BigDecimal productPrice, Integer quantity) {

@@ -39,6 +39,10 @@ public class ProductService {
         return new ResponseEntity<>(toResponseDTO(saved), HttpStatus.CREATED);
     }
 
+    public Product save(Product product) {
+        return productRepository.save(product);
+    }
+
     public Page<ProductResponseDTO> findAll(Pageable pageable) {
         return productRepository.findAll(pageable)
                 .map(this::toResponseDTO);
