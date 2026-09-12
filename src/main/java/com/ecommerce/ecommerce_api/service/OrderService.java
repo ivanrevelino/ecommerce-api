@@ -62,9 +62,10 @@ public class OrderService {
                     .price(productById.getPrice())
                     .product(productById)
                     .quantity(item.quantity())
+                    .subtotal(calculateSubtotal(productById.getPrice(), item.quantity()))
                     .build();
+
             orderItem.setOrder(orderToBeSaved);
-            orderItem.setSubtotal(calculateSubtotal(orderItem.getProduct().getPrice(), orderItem.getQuantity()));
             orderItems.add(orderItem);
         }
 

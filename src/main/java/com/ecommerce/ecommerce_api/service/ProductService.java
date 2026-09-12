@@ -9,11 +9,11 @@ import com.ecommerce.ecommerce_api.models.Product;
 import com.ecommerce.ecommerce_api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -39,13 +39,9 @@ public class ProductService {
         return new ResponseEntity<>(toResponseDTO(saved), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<List<ProductResponseDTO>> findAll() {
-        List<ProductResponseDTO> products = productRepository.findAll()
-                .stream()
-                .map(this::toResponseDTO)
-                .toList();
-
-        return ResponseEntity.ok(products);
+    public Page<ProductResponseDTO> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(this::toResponseDTO);
     }
 
     public ResponseEntity<ProductResponseDTO> findById(Long id) {
@@ -83,7 +79,7 @@ public class ProductService {
 
     public void decreaseStock(Product product, Integer quantity) {
         if (product.getStock() < quantity) {
-            throw new InsufficientStockException("Insufficient stock"); // sla oq escrever
+            throw new InsufficientStockException("Insufficient stock");
         }
         product.setStock(product.getStock() - quantity);
         productRepository.save(product);
