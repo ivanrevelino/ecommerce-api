@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,8 @@ public class RestExceptionHandler {
                 .message(exception.getMessage())
                 .status(HttpStatus.NOT_FOUND.value())
                 .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-                .developer_message("Se vira ai cara - Dev Ivan")
+                .developer_message("Check the documentation")
+                .timestamp(LocalDateTime.now())
                 .build();
         return new ResponseEntity<>(badRequestExceptionDetails, HttpStatus.NOT_FOUND);
     }
@@ -33,7 +35,8 @@ public class RestExceptionHandler {
                 .message(exception.getMessage())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .developer_message("Se vira ai cara - Dev Ivan")
+                .developer_message("Check the documentation")
+                .timestamp(LocalDateTime.now())
                 .build();
         return new ResponseEntity<>(badRequestExceptionDetails, HttpStatus.BAD_REQUEST);
     }
@@ -49,9 +52,10 @@ public class RestExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST.value())
                 .fields(fields)
                 .fieldsMessage(fieldsMessage)
+                .timestamp(LocalDateTime.now())
                 .title("Bad Request Exception, Invalid Fields")
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .developer_message("Se vira ai cara - Dev Ivan")
+                .developer_message("Check the documentation")
                 .build()
         , HttpStatus.BAD_REQUEST);
     }

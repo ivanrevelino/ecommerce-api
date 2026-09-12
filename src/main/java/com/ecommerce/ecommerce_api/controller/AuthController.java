@@ -7,6 +7,7 @@ import com.ecommerce.ecommerce_api.dto.login_register.RegisterResponseDTO;
 import com.ecommerce.ecommerce_api.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,11 +23,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO request) {
-        return authenticationService.login(request);
+        return ResponseEntity.ok(authenticationService.login(request));
     }
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponseDTO> register(@RequestBody @Valid RegisterRequestDTO request) {
-        return authenticationService.register(request);
+        return new ResponseEntity<>(authenticationService.register(request), HttpStatus.CREATED);
     }
 }

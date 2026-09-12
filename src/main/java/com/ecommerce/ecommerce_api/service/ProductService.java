@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +21,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
 
-    public ResponseEntity<ProductResponseDTO> create(ProductRequestDTO request) {
+    public ProductResponseDTO create(ProductRequestDTO request) {
         Category category = categoryService.findCategoryById(request.categoryId());
 
         Product productToBeSaved = Product.builder()
@@ -36,7 +34,7 @@ public class ProductService {
         Product saved = productRepository.save(productToBeSaved);
 
         log.info("Product(id: {}, name: {}) created successfully", saved.getId(), saved.getName());
-        return new ResponseEntity<>(toResponseDTO(saved), HttpStatus.CREATED);
+        return toResponseDTO(saved);
     }
 
     public Product save(Product product) {
@@ -48,12 +46,12 @@ public class ProductService {
                 .map(this::toResponseDTO);
     }
 
-    public ResponseEntity<ProductResponseDTO> findById(Long id) {
+    public ProductResponseDTO findById(Long id) {
         Product product = findProductById(id);
-        return ResponseEntity.ok(toResponseDTO(product));
+        return toResponseDTO(product);
     }
 
-    public ResponseEntity<ProductResponseDTO> update(Long id, ProductRequestDTO request) {
+    public ProductResponseDTO update(Long id, ProductRequestDTO request) {
         Product product = findProductById(id);
         Category category = categoryService.findCategoryById(request.categoryId());
 
@@ -65,15 +63,14 @@ public class ProductService {
         Product updated = productRepository.save(product);
 
         log.info("Product(id: {}, name: {}) updated successfully", updated.getId(), updated.getName());
-        return ResponseEntity.ok(toResponseDTO(updated));
+        return toResponseDTO(updated);
     }
 
-    public ResponseEntity<Void> delete(Long id) {
+    public void delete(Long id) {
         Product product = findProductById(id);
         productRepository.delete(product);
 
         log.info("Product(id: {}, name: {}) deleted successfully", product.getId(), product.getName());
-        return ResponseEntity.noContent().build();
     }
 
     public Product findProductById(Long id) {

@@ -7,8 +7,6 @@ import com.ecommerce.ecommerce_api.models.Category;
 import com.ecommerce.ecommerce_api.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +18,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public ResponseEntity<CategoryResponseDTO> create(CategoryRequestDTO request) {
+    public CategoryResponseDTO create(CategoryRequestDTO request) {
         Category categoryToBeSaved = Category.builder()
                 .name(request.name())
                 .build();
@@ -28,21 +26,19 @@ public class CategoryService {
         Category saved = categoryRepository.save(categoryToBeSaved);
 
         log.info("Category(id: {}, name: {}) created successfully", saved.getId(), saved.getName());
-        return new ResponseEntity<>(toResponseDTO(saved), HttpStatus.CREATED);
+        return toResponseDTO(saved);
     }
 
-    public ResponseEntity<List<CategoryResponseDTO>> findAll() {
-        List<CategoryResponseDTO> categories = categoryRepository.findAll()
+    public List<CategoryResponseDTO> findAll() {
+        return categoryRepository.findAll()
                 .stream()
                 .map(this::toResponseDTO)
                 .toList();
-
-        return ResponseEntity.ok(categories);
     }
 
-    public ResponseEntity<CategoryResponseDTO> findById(Long id) {
+    public CategoryResponseDTO findById(Long id) {
         Category category = findCategoryById(id);
-        return ResponseEntity.ok(toResponseDTO(category));
+        return toResponseDTO(category);
     }
 
     public Category findByName(String name) {
@@ -50,7 +46,7 @@ public class CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     }
 
-    public ResponseEntity<CategoryResponseDTO> update(Long id, CategoryRequestDTO request) {
+    public CategoryResponseDTO update(Long id, CategoryRequestDTO request) {
         Category category = findCategoryById(id);
 
         category.setName(request.name());
@@ -58,15 +54,14 @@ public class CategoryService {
         Category updated = categoryRepository.save(category);
 
         log.info("Category(id: {}, name: {}) updated successfully", updated.getId(), updated.getName());
-        return ResponseEntity.ok(toResponseDTO(updated));
+        return toResponseDTO(updated);
     }
 
-    public ResponseEntity<Void> delete(Long id) {
+    public void delete(Long id) {
         Category category = findCategoryById(id);
         categoryRepository.delete(category);
 
         log.info("Category(id: {}, name: {}) deleted successfully", category.getId(), category.getName());
-        return ResponseEntity.noContent().build();
     }
 
     public Category findCategoryById(Long id) {

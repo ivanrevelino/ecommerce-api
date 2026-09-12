@@ -5,6 +5,7 @@ import com.ecommerce.ecommerce_api.dto.category.CategoryResponseDTO;
 import com.ecommerce.ecommerce_api.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,27 +27,28 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryResponseDTO> create(@RequestBody @Valid CategoryRequestDTO request) {
-        return categoryService.create(request);
+        return new ResponseEntity<>(categoryService.create(request), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<CategoryResponseDTO>> findAll() {
-        return categoryService.findAll();
+        return ResponseEntity.ok(categoryService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> findById(@PathVariable Long id) {
-        return categoryService.findById(id);
+        return ResponseEntity.ok(categoryService.findById(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> update(@PathVariable Long id,
                                                       @RequestBody @Valid CategoryRequestDTO request) {
-        return categoryService.update(id, request);
+        return ResponseEntity.ok(categoryService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        return categoryService.delete(id);
+        categoryService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

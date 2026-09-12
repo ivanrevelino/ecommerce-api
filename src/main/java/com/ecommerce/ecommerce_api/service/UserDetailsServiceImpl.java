@@ -1,5 +1,6 @@
 package com.ecommerce.ecommerce_api.service;
 
+import com.ecommerce.ecommerce_api.exception.ResourceNotFoundException;
 import com.ecommerce.ecommerce_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
@@ -18,6 +19,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public @NonNull UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
 
         return repository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 }

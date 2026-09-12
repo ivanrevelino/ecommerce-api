@@ -24,29 +24,33 @@ class ProductRepositoryTest {
     @DisplayName("Should create Product when Successful")
     void shouldCreateProductWhenSuccessful() {
         Product saved = generate();
-
         Assertions.assertThat(saved.getId()).isNotNull();
     }
 
     @Test
     @DisplayName("Should delete product when Successful")
-    void shouldDeleteProjectWhenSuccessful() {
+    void shouldDeleteProductWhenSuccessful() {
 
         Product saved = generate();
-
 
         Assertions.assertThat(saved.getId()).isNotNull();
 
         productRepository.delete(saved);
         Optional<Product> productById = productRepository.findById(saved.getId());
 
-        Assertions.assertThat(productById.isEmpty());
+        Assertions.assertThat(productById).isEmpty();
     }
 
     @Test
     @DisplayName("FindById should return right project when Successful")
     void findByIdShouldReturnRightProjectWhenSuccessful() {
+        Product product = generate();
 
+        Optional<Product> productById = productRepository.findById(product.getId());
+
+        Assertions.assertThat(productById).isPresent();
+        Assertions.assertThat(productById.get().getId()).isEqualTo(product.getId());
+        Assertions.assertThat(productById.get().getName()).isEqualTo("Banana");
     }
 
     public Product generate() {

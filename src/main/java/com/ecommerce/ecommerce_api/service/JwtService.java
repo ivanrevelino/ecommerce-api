@@ -16,18 +16,20 @@ import java.time.temporal.ChronoUnit;
 @Slf4j
 public class JwtService {
 
-    Instant now = Instant.now();
     Dotenv dotenv = Dotenv.load();
     String key = dotenv.get("JWT_SECRET");
 
     public String generateToken(User user) {
+    Instant now = Instant.now();
         try {
             Algorithm algorithm = Algorithm.HMAC256(key);
             return JWT.create()
                     .withIssuedAt(now)
                     .withIssuer("auth-api")
-                    .withExpiresAt(expirationTime())
+                    .withIssuedAt(now)
+                    .withExpiresAt(now.plus(1, ChronoUnit.HOURS))
                     .withSubject(user.getUsername())
+                    .withClaim("role", user.getRoles().name())
                     .sign(algorithm);
         } catch (JWTCreationException exception) {
             log.error("Error while creating token{}", exception.getMessage());
@@ -44,13 +46,11 @@ public class JwtService {
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException exception) {
-            log.error("Error while verifying token");
-            return null;
+            throw new RuntimeException("Token invalido ou expirado");
         }
     }
 
     public Instant expirationTime() {
         return Instant.now().plus(1, ChronoUnit.HOURS);
     }
-
 }

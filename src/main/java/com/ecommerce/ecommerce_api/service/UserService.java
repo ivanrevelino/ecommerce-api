@@ -10,8 +10,6 @@ import com.ecommerce.ecommerce_api.models.User;
 import com.ecommerce.ecommerce_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,26 +28,24 @@ public class UserService {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    public ResponseEntity<List<UserResponseDTO>> findAll() {
-        List<UserResponseDTO> users = userRepository.findAll()
+    public List<UserResponseDTO> findAll() {
+        return userRepository.findAll()
                 .stream()
                 .map(this::toResponseDTO)
                 .toList();
-
-        return ResponseEntity.ok(users);
     }
 
-    public ResponseEntity<UserResponseDTO> findById(Long id) {
+    public UserResponseDTO findById(Long id) {
         User user = findUserById(id);
-        return ResponseEntity.ok(toResponseDTO(user));
+        return toResponseDTO(user);
     }
 
-    public ResponseEntity<UserResponseDTO> findByUsername(String username) {
+    public UserResponseDTO findByUsername(String username) {
         User user = findUserByUsername(username);
-        return ResponseEntity.ok(toResponseDTO(user));
+        return toResponseDTO(user);
     }
 
-    public ResponseEntity<UserResponseDTO> update(Long id, UserUpdateDTO request) {
+    public UserResponseDTO update(Long id, UserUpdateDTO request) {
         User user = findUserById(id);
         validateUsernameIsAvailable(request.username(), id);
 
@@ -59,10 +55,10 @@ public class UserService {
         User updated = userRepository.save(user);
 
         log.info("User(id: {}, username: {}, role: {}) updated successfully", updated.getId(), updated.getUsername(), updated.getRoles());
-        return ResponseEntity.ok(toResponseDTO(updated));
+        return toResponseDTO(updated);
     }
 
-    public ResponseEntity<Void> updatePassword(Long id, UserPasswordUpdateDTO request) {
+    public void updatePassword(Long id, UserPasswordUpdateDTO request) {
         User user = findUserById(id);
 
         if (!bcrypt.matches(request.currentPassword(), user.getPassword())) {
@@ -73,15 +69,13 @@ public class UserService {
         userRepository.save(user);
 
         log.info("User(id: {}, username: {}) updated password successfully", user.getId(), user.getUsername());
-        return ResponseEntity.noContent().build();
     }
 
-    public ResponseEntity<Void> delete(Long id) {
+    public void delete(Long id) {
         User user = findUserById(id);
         userRepository.delete(user);
 
         log.info("User(id: {}, username: {}) deleted successfully", user.getId(), user.getUsername());
-        return ResponseEntity.noContent().build();
     }
 
     public User findUserById(Long id) {

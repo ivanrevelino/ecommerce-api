@@ -16,8 +16,6 @@ import com.ecommerce.ecommerce_api.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +42,7 @@ public class OrderService {
     }
 
     @Transactional
-    public ResponseEntity<OrderResponseDTO> createOrder(OrderRequestDTO request) {
+    public OrderResponseDTO createOrder(OrderRequestDTO request) {
         User user = userService.getAuthenticatedUser();
         Order orderToBeSaved = Order.builder()
                 .user(user)
@@ -75,9 +73,7 @@ public class OrderService {
         orderToBeSaved.setTotal(total);
         Order saved = repository.save(orderToBeSaved);
 
-        OrderResponseDTO orderResponseDTO = orderMapper.toDto(saved);
-
-        return new ResponseEntity<>(orderResponseDTO, HttpStatus.CREATED);
+        return orderMapper.toDto(saved);
     }
 
     @Transactional
@@ -102,20 +98,20 @@ public class OrderService {
         repository.save(order);
     }
 
-    public ResponseEntity<OrderResponseDTO> findById(Long id) {
+    public OrderResponseDTO findById(Long id) {
         User user = userService.getAuthenticatedUser();
 
         Order order = repository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
-        return ResponseEntity.ok(orderMapper.toDto(order));
+        return orderMapper.toDto(order);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    public Order findOrderById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id + " + id));
-    }
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public Order findOrderById(Long id) {
+//        return repository.findById(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id + " + id));
+//    }
 
     public BigDecimal calculateSubtotal(BigDecimal productPrice, Integer quantity) {
         return productPrice.multiply(BigDecimal.valueOf(quantity));

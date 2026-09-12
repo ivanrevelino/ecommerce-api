@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,25 +27,26 @@ public class ProductController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponseDTO> create(@RequestBody @Valid ProductRequestDTO request) {
-        return productService.create(request);
+        return new ResponseEntity<>(productService.create(request), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponseDTO> findById(@PathVariable Long id) {
-        return productService.findById(id);
+        return ResponseEntity.ok(productService.findById(id));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponseDTO> update(@PathVariable Long id,
                                                      @RequestBody @Valid ProductRequestDTO request) {
-        return productService.update(id, request);
+        return ResponseEntity.ok(productService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        return productService.delete(id);
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

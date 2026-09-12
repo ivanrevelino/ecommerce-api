@@ -20,33 +20,35 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> findAll() {
-        return userService.findAll();
+        return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id) {
-        return userService.findById(id);
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     @GetMapping("filter/{username}")
     public ResponseEntity<UserResponseDTO> findByUsername(@PathVariable String username) {
-        return userService.findByUsername(username);
+        return ResponseEntity.ok(userService.findByUsername(username));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDTO> update(@PathVariable Long id,
                                                   @RequestBody @Valid UserUpdateDTO request) {
-        return userService.update(id, request);
+        return ResponseEntity.ok(userService.update(id, request));
     }
 
     @PatchMapping("/{id}/password")
     public ResponseEntity<Void> updatePassword(@PathVariable Long id,
                                                @RequestBody @Valid UserPasswordUpdateDTO request) {
-        return userService.updatePassword(id, request);
+        userService.updatePassword(id, request);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        return userService.delete(id);
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
