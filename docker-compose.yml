@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: ecommerce_container
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ecommerce_db
+      POSTGRES_USER: ${DOCKER_DB_USERNAME}
+      POSTGRES_PASSWORD: ${DOCKER_DB_PASSWORD}
+
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgres/data
+
+volumes:
+  postgres_data:
