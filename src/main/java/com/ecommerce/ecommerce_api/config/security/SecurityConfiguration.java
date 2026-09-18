@@ -31,9 +31,14 @@ public class SecurityConfiguration {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/swagger-ui.html").permitAll()
                                 .requestMatchers("/users", "/users/**").hasRole("ADMIN")
                                 .requestMatchers("/categories","/categories/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
