@@ -35,4 +35,12 @@ public class Product {
 
     @Version
     private Long version;
+
+    public Product(Long id, String name, BigDecimal price, Category category, Integer stock) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.category = category;
+        this.stock = stock;
+    }
 }

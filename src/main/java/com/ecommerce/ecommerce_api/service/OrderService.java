@@ -32,7 +32,6 @@ public class OrderService {
     private final OrderRepository repository;
     private final UserService userService;
     private final ProductService productService;
-    private final OrderItemMapper orderItemMapper;
     private final OrderMapper orderMapper;
 
 
@@ -106,12 +105,6 @@ public class OrderService {
 
         return orderMapper.toDto(order);
     }
-
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public Order findOrderById(Long id) {
-//        return repository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id + " + id));
-//    }
 
     public BigDecimal calculateSubtotal(BigDecimal productPrice, Integer quantity) {
         return productPrice.multiply(BigDecimal.valueOf(quantity));

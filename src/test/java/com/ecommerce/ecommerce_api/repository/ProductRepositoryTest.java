@@ -53,6 +53,14 @@ class ProductRepositoryTest {
         Assertions.assertThat(productById.get().getName()).isEqualTo("Banana");
     }
 
+    @Test
+    @DisplayName("FindById should not return product when it not exists")
+    void findByIdShouldNotReturnProductWhenItNotExists() {
+        long notExistsId = 9999;
+        Optional<Product> product = productRepository.findById(notExistsId);
+        Assertions.assertThat(product).isEmpty();
+    }
+
     public Product generate() {
         Category category = categoryRepository.save(Category.builder().name("Alimentos").build());
 
