@@ -103,5 +103,6 @@ class UserRepositoryTest {
                 .createdAt(LocalDateTime.now())
                 .build();
         return repository.save(user);
+
     }
 }
