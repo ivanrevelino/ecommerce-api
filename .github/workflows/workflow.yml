@@ -1,0 +1,17 @@
+name: Continuos Integration
+
+on: [pull_request, push]
+
+jobs:
+  continuos-integration:
+    runs-on: ubuntu-latest
+
+  steps:
+    - uses: actions/checkout@v6
+    - name: Set up JDK 21
+    - uses: actions/setup-java@v6
+      with:
+        distribution: temurin
+        java-version: '21'
+    - name: Run tests
+    - run: ./mvnw.cmd test
