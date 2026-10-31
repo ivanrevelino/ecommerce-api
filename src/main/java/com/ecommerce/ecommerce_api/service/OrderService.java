@@ -3,9 +3,7 @@ package com.ecommerce.ecommerce_api.service;
 import com.ecommerce.ecommerce_api.dto.order.OrderRequestDTO;
 import com.ecommerce.ecommerce_api.dto.order.OrderResponseDTO;
 import com.ecommerce.ecommerce_api.dto.order_item.OrderItemRequestDTO;
-import com.ecommerce.ecommerce_api.dto.order_item.OrderItemResponseDTO;
 import com.ecommerce.ecommerce_api.exception.ResourceNotFoundException;
-import com.ecommerce.ecommerce_api.mapper.OrderItemMapper;
 import com.ecommerce.ecommerce_api.mapper.OrderMapper;
 import com.ecommerce.ecommerce_api.models.Order;
 import com.ecommerce.ecommerce_api.models.OrderItem;
@@ -16,14 +14,12 @@ import com.ecommerce.ecommerce_api.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -76,12 +72,12 @@ public class OrderService {
     }
 
     @Transactional
-    public void returnOrder(Long orderId) {
+    public void cancelOrder(Long orderId) {
         User user = userService.getAuthenticatedUser();
         Order order = repository.findByIdAndUser(orderId, user)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
-        if (order.getStatus() == OrderStatus.CANCELLED) throw new IllegalStateException("Order is already cancelled");
+        if (order.getStatus() != OrderStatus.PENDING) throw new IllegalStateException("You cannot cancel this order");
 
         List<OrderItem> orderItems = order.getOrderItems();
 

@@ -35,7 +35,7 @@ public class OrderController {
 
     @PatchMapping("/{orderId}/cancel")
     public ResponseEntity<Void> returnOrder(@PathVariable Long orderId) {
-        orderService.returnOrder(orderId);
+        orderService.cancelOrder(orderId);
         return ResponseEntity.noContent().build();
     }
 }
