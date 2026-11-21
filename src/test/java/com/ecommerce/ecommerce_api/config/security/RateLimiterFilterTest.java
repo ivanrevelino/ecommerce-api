@@ -1,5 +1,6 @@
 package com.ecommerce.ecommerce_api.config.security;
 
+import com.ecommerce.ecommerce_api.security.filters.RateLimiterFilter;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;

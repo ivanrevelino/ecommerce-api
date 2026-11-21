@@ -1,4 +1,4 @@
-package com.ecommerce.ecommerce_api.service;
+package com.ecommerce.ecommerce_api.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

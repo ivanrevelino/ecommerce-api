@@ -1,5 +1,6 @@
-package com.ecommerce.ecommerce_api.config.security;
+package com.ecommerce.ecommerce_api.security;
 
+import com.ecommerce.ecommerce_api.security.filters.SecurityFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

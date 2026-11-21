@@ -1,8 +1,8 @@
-package com.ecommerce.ecommerce_api.config.security;
+package com.ecommerce.ecommerce_api.security.filters;
 
 import com.ecommerce.ecommerce_api.exception.ResourceNotFoundException;
 import com.ecommerce.ecommerce_api.repository.UserRepository;
-import com.ecommerce.ecommerce_api.service.JwtService;
+import com.ecommerce.ecommerce_api.security.jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -37,8 +37,8 @@ public class ProductService {
         return toResponseDTO(saved);
     }
 
-    public Product save(Product product) {
-        return productRepository.save(product);
+    public void save(Product product) {
+        productRepository.save(product);
     }
 
     public Page<ProductResponseDTO> findAll(Pageable pageable) {
