@@ -8,6 +8,7 @@ import com.ecommerce.ecommerce_api.exception.BadRequestException;
 import com.ecommerce.ecommerce_api.models.User;
 import com.ecommerce.ecommerce_api.models.enums.UserRoles;
 import com.ecommerce.ecommerce_api.repository.UserRepository;
+import com.ecommerce.ecommerce_api.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;

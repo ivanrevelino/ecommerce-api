@@ -1,4 +1,4 @@
-package com.ecommerce.ecommerce_api.config.security;
+package com.ecommerce.ecommerce_api.security.filters;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
