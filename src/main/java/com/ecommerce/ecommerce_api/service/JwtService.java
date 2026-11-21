@@ -16,7 +16,19 @@ import java.time.temporal.ChronoUnit;
 @Slf4j
 public class JwtService {
 
-    String key = System.getenv("JWT_SECRET");
+    private final String key = loadSecret();
+
+    private static String loadSecret() {
+        String environmentSecret = System.getenv("JWT_SECRET");
+        if (environmentSecret != null && !environmentSecret.isBlank()) {
+            return environmentSecret;
+        }
+
+        return Dotenv.configure()
+                .ignoreIfMissing()
+                .load()
+                .get("JWT_SECRET");
+    }
 
     public String generateToken(User user) {
     Instant now = Instant.now();
