@@ -1,6 +1,5 @@
 package com.ecommerce.ecommerce_api.config.security;
 
-import com.ecommerce.ecommerce_api.config.CorsConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,13 +19,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
 
     private final SecurityFilter securityFilter;
-    private final CorsConfig config;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity security) {
         return security
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(config.corsConfigurationSource()))
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
